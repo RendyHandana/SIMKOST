@@ -1,0 +1,32 @@
+@model IEnumerable<SIMKOST.Models.Sewa>
+
+<h2>Data Sewa</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">
+    Tambah Sewa
+</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Penghuni</th>
+            <th>Kamar</th>
+            <th>Tanggal Masuk</th>
+            <th>Tanggal Keluar</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.Penghuni?.Nama</td>
+                <td>@item.Kamar?.NomorKamar</td>
+                <td>@item.TanggalMasuk.ToShortDateString()</td>
+                <td>
+                    @(item.TanggalKeluar?.ToShortDateString() ?? "-")
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

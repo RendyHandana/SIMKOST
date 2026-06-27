@@ -1,0 +1,153 @@
+@model SIMKOST.Models.Pembayaran
+@{
+    Layout = null; // Menghilangkan struktur sidebar & topbar layout utama
+}
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <title>Invoice #INV-@Model.Id</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #1e293b;
+            margin: 0;
+            padding: 40px;
+            background: #fff;
+        }
+        .invoice-header {
+            display: table;
+            width: 100%;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .brand {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e40af;
+        }
+        .invoice-details {
+            display: table;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+        .col {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .table-invoice {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 50px;
+        }
+        .table-invoice th {
+            background: #f1f5f9;
+            padding: 12px;
+            font-weight: 600;
+            text-align: left;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        .table-invoice td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .total-box {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+            float: right;
+        }
+        .badge-lunas {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        /* Menggunakan @@ agar tidak dianggap variabel C# oleh Razor Engine */
+        @@media print {
+            body {
+                padding: 20px;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="invoice-header">
+        <div class="col">
+            <span class="brand">🏠 KOST PELANGI</span>
+            <p style="color: #64748b; margin: 5px 0 0 0;">Sistem Manajemen Kos Modern</p>
+        </div>
+        <div class="col text-right">
+            <h2 style="margin: 0; color: #0f172a;">KUITANSI RESMI</h2>
+            <p style="color: #64748b; margin: 5px 0 0 0;">Nomor: INV/@DateTime.Now.Year/@Model.Id</p>
+        </div>
+    </div>
+
+    <div class="invoice-details">
+        <div class="col">
+            <h5 style="color: #64748b; margin-bottom: 5px; text-transform: uppercase;">Ditagih Kepada:</h5>
+            <strong style="font-size: 16px;">@(Model.Sewa?.Penghuni?.Nama ?? "-")</strong>
+            <p style="margin: 5px 0;">No. Kamar: <strong>@(Model.Sewa?.Kamar?.NomorKamar ?? Model.SewaId.ToString())</strong></p>
+        </div>
+        <div class="col text-right">
+            <h5 style="color: #64748b; margin-bottom: 5px; text-transform: uppercase;">Tanggal Bayar:</h5>
+            <p style="margin: 5px 0;">@Model.TanggalBayar.ToString("dd MMMM yyyy")</p>
+            <div class="badge-lunas" style="margin-top: 10px;">LUNAS</div>
+        </div>
+    </div>
+
+    <table class="table-invoice">
+        <thead>
+            <tr>
+                <th>Deskripsi Pembayaran</th>
+                <th class="text-right">Total Tagihan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <strong>Sewa Kamar Kos</strong><br>
+                    <small style="color: #64748b;">Periode bulan transaksi berjalan</small>
+                </td>
+                <td class="text-right" style="font-size: 16px; font-weight: 600;">
+                    Rp @Model.JumlahBayar.ToString("N0")
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="width: 100%; overflow: hidden;">
+        <div class="total-box text-right">
+            <span style="color: #64748b; font-size: 14px;">TOTAL PEMBAYARAN</span>
+            <h2 style="color: #16a34a; margin: 5px 0 0 0; font-weight: 700;">Rp @Model.JumlahBayar.ToString("N0")</h2>
+        </div>
+    </div>
+
+    <div style="margin-top: 100px; text-align: center; color: #94a3b8; font-size: 12px; border-top: 1px dashed #e2e8f0; padding-top: 20px;">
+        Terima kasih telah melakukan pembayaran tepat waktu. Kuitansi ini sah dan dihasilkan otomatis oleh sistem SIMKOST.
+    </div>
+
+    <script>
+        window.onload = function () {
+            // Membuka dialog cetak bawaan browser (Chrome/Edge/Firefox)
+            window.print();
+        }
+    </script>
+
+</body>
+</html>

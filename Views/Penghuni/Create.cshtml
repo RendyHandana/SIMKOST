@@ -1,0 +1,55 @@
+@model SIMKOST.Models.Penghuni
+
+@{
+    ViewData["Title"] = "Tambah Penghuni";
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow" style="border-radius: 15px; border: none; max-width: 600px;">
+        <div class="card-header bg-white border-0 pt-4 pb-0">
+            <h4 class="fw-bold text-primary"><i class="fas fa-user-plus me-2"></i>Tambah Penghuni Baru</h4>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Nama" class="form-label fw-bold"></label>
+                    <input asp-for="Nama" class="form-control" placeholder="Nama lengkap penghuni" />
+                    <span asp-validation-for="Nama" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="NIK" class="form-label fw-bold"></label>
+                    <input asp-for="NIK" class="form-control" placeholder="Nomor Induk Kependudukan" />
+                    <span asp-validation-for="NIK" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="NoHP" class="form-label fw-bold"></label>
+                    <input asp-for="NoHP" class="form-control" placeholder="Contoh: 0812xxxx" />
+                    <span asp-validation-for="NoHP" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Alamat" class="form-label fw-bold"></label>
+                    <textarea asp-for="Alamat" class="form-control" rows="2" placeholder="Alamat lengkap asal"></textarea>
+                    <span asp-validation-for="Alamat" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Upload Foto KTP</label>
+                    <input type="file" name="fileKtp" class="form-control" accept="image/*" />
+                    <div class="form-text small text-muted">Format: JPG, PNG (Max 2MB)</div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4">Batal</a>
+                    <button type="submit" class="btn btn-primary px-4 shadow-sm" style="background: linear-gradient(135deg, #1e40af, #2563eb); border: none;">
+                        <i class="fas fa-save me-2"></i>Simpan Data
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

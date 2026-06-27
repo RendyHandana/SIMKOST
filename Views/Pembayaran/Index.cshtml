@@ -1,0 +1,78 @@
+@model IEnumerable<SIMKOST.Models.Pembayaran>
+
+@{
+    ViewData["Title"] = "Data Pembayaran";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 fw-bold text-gray-800">💰 Riwayat Pembayaran Kos</h2>
+            <p class="text-muted small">Kelola data transaksi pembayaran penghuni.</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary px-4 shadow-sm" style="border-radius: 12px;">
+            <i class="fas fa-plus me-2"></i>Tambah Pembayaran
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="px-4 py-3">NAMA PENGHUNI</th>
+                        <th>NO. KAMAR</th>
+                        <th>TANGGAL BAYAR</th>
+                        <th>JATUH TEMPO</th>
+                        <th>JUMLAH BAYAR</th>
+                        <th>STATUS</th>
+                        <th class="text-center">AKSI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        // Perbaikan logika null-check untuk sisa hari
+                        int sisaHari = item.TanggalJatuhTempo.HasValue 
+                            ? (item.TanggalJatuhTempo.Value - DateTime.Today).Days 
+                            : 0;
+
+                        string rowClass = (item.TanggalJatuhTempo.HasValue && sisaHari < 0) ? "table-danger" : (sisaHari <= 3 && sisaHari >= 0 ? "table-warning" : "");
+
+                        <tr class="@rowClass">
+                            <td class="px-4 fw-bold">@item.Sewa?.Penghuni?.Nama</td>
+                            <td>@item.Sewa?.Kamar?.NomorKamar</td>
+                            <td>@item.TanggalBayar.ToString("dd MMM yyyy")</td>
+                            <td>
+                                @(item.TanggalJatuhTempo?.ToString("dd MMM yyyy") ?? "-")
+                                @if (item.TanggalJatuhTempo.HasValue && sisaHari < 0) {
+                                    <br><small class="text-danger fw-bold"><i class="fas fa-exclamation-triangle"></i> Telat @Math.Abs(sisaHari) hari</small>
+                                }
+                            </td>
+                            <td>Rp @item.JumlahBayar.ToString("N0")</td>
+                            <td>
+                                <span class="badge @(item.Status == "Lunas" ? "bg-success" : "bg-warning text-dark") rounded-pill px-3">
+                                    @item.Status
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a asp-action="CetakInvoice" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" style="border-radius: 8px;">
+                                        <i class="fas fa-file-pdf"></i> PDF
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning text-white" style="border-radius: 8px;">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" style="border-radius: 8px;"
+                                       onclick="return confirm('Hapus data ini?')">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

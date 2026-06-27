@@ -1,0 +1,43 @@
+@model SIMKOST.Models.Kamar
+
+<h2>Hapus Kamar</h2>
+
+<div class="alert alert-danger">
+    Apakah Anda yakin ingin menghapus data ini?
+</div>
+
+<table class="table">
+    <tr>
+        <th>Nomor Kamar</th>
+        <td>@Model.NomorKamar</td>
+    </tr>
+
+    <tr>
+        <th>Lantai</th>
+        <td>@Model.Lantai</td>
+    </tr>
+
+    <tr>
+        <th>Harga</th>
+        <td>Rp @Model.Harga.ToString("N0")</td>
+    </tr>
+
+    <tr>
+        <th>Status</th>
+        <td>@Model.Status</td>
+    </tr>
+</table>
+
+<form asp-action="Delete">
+
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit" class="btn btn-danger">
+        Ya, Hapus
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Batal
+    </a>
+
+</form>

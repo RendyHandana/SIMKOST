@@ -1,0 +1,98 @@
+/* ==========================================================================
+   STYLE DASAR APLIKASI
+   ========================================================================== */
+html { font-size: 14px; position: relative; min-height: 100%; }
+@media (min-width: 768px) { html { font-size: 16px; } }
+body { margin-bottom: 60px; background-color: #f8f9fc; } /* Sedikit warna background agar kontras */
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* ==========================================================================
+   VISUAL MODERN MANAJEMEN KAMAR
+   ========================================================================== */
+.kamar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.kamar-grid .card.card-kamar {
+    border: none !important;
+    border-radius: 28px !important;
+    padding: 20px !important;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    position: relative;
+    overflow: hidden;
+    color: #ffffff !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    background: #ffffff;
+}
+
+.kamar-grid .card.card-kamar:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2) !important;
+}
+
+.card-kamar.card-terisi { background: linear-gradient(160deg, #ff8a80, #d32f2f) !important; }
+.card-kamar.card-kosong { background: linear-gradient(160deg, #81c784, #2e7d32) !important; }
+
+/* Badge Status */
+.badge-status {
+    background: rgba(0, 0, 0, 0.15) !important;
+    backdrop-filter: blur(5px);
+    padding: 6px 15px !important;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 50px !important;
+    margin-bottom: 10px;
+}
+
+/* ==========================================================================
+   VISUAL TABEL MODERN (Untuk Halaman Pembayaran)
+   ========================================================================== */
+.table thead th {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #888;
+    background-color: #fcfcfc !important;
+    padding: 16px !important;
+}
+
+.table tbody td {
+    padding: 16px !important;
+    vertical-align: middle !important;
+}
+
+/* ==========================================================================
+   TOMBOL AKSI UMUM
+   ========================================================================== */
+/* Tombol di Kamar */
+.btn-action-kamar {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-action-kamar:hover {
+    background: rgba(255, 255, 255, 0.4) !important;
+    transform: scale(1.1);
+}
+
+.card-kamar h4 { margin: 5px 0 !important; color: white !important; }

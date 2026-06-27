@@ -1,0 +1,400 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@{
+    var username = Context.Session.GetString("Username");
+    bool isLoggedIn = !string.IsNullOrEmpty(username); 
+}
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - SIMKOST</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            background: #f8fafc; /* Menggunakan warna netral abu-abu sangat muda */
+            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif; /* Mengubah font global */
+            color: #334155;
+        }
+
+        /* Sidebar dengan Gradasi Premium */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0f172a, #1e40af);
+            color: white;
+            z-index: 1000;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            padding: 25px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .menu {
+            padding: 20px 15px;
+        }
+
+        /* Micro-interactions pada Navigasi */
+        .menu a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-weight: 500;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .menu a i {
+            transition: transform 0.25s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Efek sedikit membesar pada ikon menu saat hover */
+        .menu a:hover i {
+            transform: scale(1.15);
+        }
+
+        /* Konten Dinamis */
+        .content {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .content.has-sidebar {
+            margin-left: 260px;
+        }
+
+        .content.full-width {
+            margin-left: 0;
+        }
+
+        /* Topbar yang Lebih Bersih */
+        .topbar {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px); /* Efek kaca blur transparan modern */
+            height: 75px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .search-box {
+            width: 350px;
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .search-box:focus {
+            background-color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Style Kustom untuk Hasil Dropdown Pencarian Global */
+        .style-dropdown-search {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-top: 5px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+        }
+        
+        .search-item-link {
+            display: block;
+            padding: 10px 15px;
+            color: #334155;
+            text-decoration: none;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .search-item-link:last-child {
+            border-bottom: none;
+        }
+        
+        .search-item-link:hover {
+            background: #f1f5f9;
+            color: #1e40af;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .user-box {
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn {
+            text-decoration: none;
+            color: #ef4444;
+            margin-left: 15px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        /* ==========================================================================
+            MODERN COLOURED CARDS & INTERACTION (SIMKOST UTILITY)
+            ========================================================================== */
+        
+        /* 1. Total Kamar (Soft Cyan - Blue) */
+        .card-kamar {
+            background: linear-gradient(135deg, #46b3c7, #2575fc) !important;
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.2) !important;
+        }
+
+        /* 2. Total Penghuni (Fresh Emerald Green) */
+        .card-penghuni {
+            background: linear-gradient(135deg, #11998e, #38ef7d) !important;
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.2) !important;
+        }
+
+        /* 3. Total Sewa (Warm Orange - Golden Yellow) */
+        .card-sewa {
+            background: linear-gradient(135deg, #f2994a, #f2c94c) !important;
+            box-shadow: 0 8px 20px rgba(242, 153, 74, 0.2) !important;
+        }
+
+        /* 4. Total Pendapatan (Elegant Purple - Pinkish) */
+        .card-pendapatan {
+            background: linear-gradient(135deg, #da4453, #89216b) !important;
+            box-shadow: 0 8px 20px rgba(137, 33, 107, 0.2) !important;
+        }
+
+        /* Base Setup & Hover Micro-Interaction untuk Semua Card Berwarna */
+        .card-kamar, .card-penghuni, .card-sewa, .card-pendapatan {
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 16px !important;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease !important;
+        }
+
+        .card-kamar:hover, .card-penghuni:hover, .card-sewa:hover, .card-pendapatan:hover {
+            transform: translateY(-6px) !important;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.15) !important;
+            cursor: pointer;
+        }
+
+        /* Sinkronisasi teks kecil & angka besar di dalam card agar putih kontras */
+        .card-kamar .text-muted, .card-penghuni .text-muted, .card-sewa .text-muted, .card-pendapatan .text-muted {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        .card-kamar h2, .card-penghuni h2, .card-sewa h2, .card-pendapatan h4 {
+            color: #ffffff !important;
+        }
+
+        /* Efek Kaca Transparan (Glassmorphism) untuk Kotak Wadah Ikon */
+        .card-kamar .bg-light, .card-penghuni .bg-light, .card-sewa .bg-light, .card-pendapatan .bg-light {
+            background-color: rgba(255, 255, 255, 0.22) !important;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            color: #ffffff !important;
+        }
+        .card-kamar i, .card-penghuni i, .card-sewa i, .card-pendapatan i {
+            color: #ffffff !important;
+        }
+
+        /* Global Soft Utilities */
+        .tracking-wider {
+            letter-spacing: 0.06em;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .btn {
+            border-radius: 10px !important;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    @if (isLoggedIn)
+    {
+        <div class="sidebar">
+            <div class="logo">
+                🏠 SIMKOST
+            </div>
+
+            <div class="menu">
+                <a asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-chart-line me-3"></i> Dashboard
+                </a>
+
+                <a asp-controller="Kamar" asp-action="Index">
+                    <i class="fas fa-bed me-3"></i> Kamar
+                </a>
+
+                <a asp-controller="Penghuni" asp-action="Index">
+                    <i class="fas fa-users me-3"></i> Penghuni
+                </a>
+
+                <a asp-controller="Sewa" asp-action="Index">
+                    <i class="fas fa-file-contract me-3"></i> Sewa
+                </a>
+
+                <a asp-controller="Pembayaran" asp-action="Index">
+                    <i class="fas fa-money-bill-wave me-3"></i> Pembayaran
+                </a>
+            </div>
+        </div>
+    }
+
+    <div class="content @(isLoggedIn ? "has-sidebar" : "full-width")">
+
+        @if (isLoggedIn)
+        {
+            <div class="topbar">
+                <div style="position: relative; width: 350px;">
+                    <input type="text"
+                           id="globalSearchInput"
+                           class="form-control search-box"
+                           placeholder="Cari menu atau data..."
+                           autocomplete="off" />
+                    
+                    <div id="searchDropdown" class="dropdown-menu style-dropdown-search w-100" style="display: none; position: absolute; max-height: 320px; overflow-y: auto; z-index: 1050;"></div>
+                </div>
+
+                <div class="user-box">
+                    <i class="fas fa-user-circle fa-lg text-secondary"></i>
+                    <span class="ms-1">@username</span>
+
+                    <a asp-controller="Account" asp-action="Logout" class="logout-btn">
+                        <i class="fas fa-sign-out-alt me-1"></i> Keluar
+                    </a>
+                </div>
+            </div>
+        }
+
+        <div class="main-content">
+            @RenderBody()
+        </div>
+
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("globalSearchInput");
+            const searchDropdown = document.getElementById("searchDropdown");
+
+            if (!searchInput || !searchDropdown) return;
+
+            // Data Menu lokal untuk pencarian navigasi cepat
+            const aplikasiMenus = [
+                { kategori: "Navigasi Menu", teks: "Dashboard Analitik", url: "/Home/Index" },
+                { kategori: "Navigasi Menu", teks: "Manajemen Kamar Kost", url: "/Kamar/Index" },
+                { kategori: "Navigasi Menu", teks: "Data Penghuni Kost", url: "/Penghuni/Index" },
+                { kategori: "Navigasi Menu", teks: "Kontrak & Transaksi Sewa", url: "/Sewa/Index" },
+                { kategori: "Navigasi Menu", teks: "Riwayat Pembayaran Kost", url: "/Pembayaran/Index" }
+            ];
+
+            searchInput.addEventListener("input", function () {
+                let keyword = searchInput.value.trim().toLowerCase();
+
+                if (keyword.length < 2) {
+                    searchDropdown.style.display = "none";
+                    searchDropdown.innerHTML = "";
+                    return;
+                }
+
+                searchDropdown.innerHTML = "";
+                let combinedResults = [];
+
+                // 1. Filter dari menu lokal terlebih dahulu
+                let menuCocok = aplikasiMenus.filter(m => m.teks.toLowerCase().includes(keyword));
+                combinedResults = [...menuCocok];
+
+                // 2. Ambil data dinamis dari Database via Fetch AJAX
+                fetch(`/Home/GlobalSearch?query=${encodeURIComponent(keyword)}`)
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.success && res.data.length > 0) {
+                            combinedResults = [...combinedResults, ...res.data];
+                        }
+
+                        // Tampilkan semua hasil gabungan
+                        if (combinedResults.length > 0) {
+                            combinedResults.forEach(item => {
+                                let row = document.createElement("a");
+                                row.className = "search-item-link";
+                                row.href = item.url;
+                                row.innerHTML = `
+                                    <small class="text-primary d-block font-weight-bold" style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px;">${item.kategori}</small>
+                                    <span style="font-size: 0.9rem;">${item.teks}</span>
+                                `;
+                                searchDropdown.appendChild(row);
+                            });
+                            searchDropdown.style.display = "block";
+                        } else {
+                            searchDropdown.innerHTML = "<div class='p-3 text-muted text-center small'>Data tidak ditemukan</div>";
+                            searchDropdown.style.display = "block";
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Error Fetch Search:", err);
+                        // Tetap tampilkan menu lokal meskipun database gagal merespons
+                        if (combinedResults.length > 0) {
+                            searchDropdown.style.display = "block";
+                        }
+                    });
+            });
+
+            // Tutup dropdown otomatis jika user melakukan klik di luar area search box
+            document.addEventListener("click", function (e) {
+                if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                    searchDropdown.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

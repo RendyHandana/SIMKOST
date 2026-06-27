@@ -1,0 +1,109 @@
+@model IEnumerable<SIMKOST.Models.Kamar>
+
+@{
+    ViewData["Title"] = "Manajemen Kamar";
+    int totalKamar = Model.Count();
+    int kamarTerisi = Model.Count(k => k.Status == "Terisi");
+    int kamarKosong = totalKamar - kamarTerisi;
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 mb-1 text-gray-800 fw-bold">🛏️ Manajemen Kamar</h2>
+            <div class="text-muted small">
+                Total: <b>@totalKamar</b> | 
+                Terisi: <b class="text-danger">@kamarTerisi</b> | 
+                Kosong: <b class="text-success">@kamarKosong</b>
+            </div>
+        </div>
+        <a asp-action="Create" class="btn btn-primary px-4 shadow-sm" style="border-radius: 12px;">
+            <i class="fas fa-plus me-2"></i>Tambah Kamar
+        </a>
+    </div>
+
+    <ul class="nav nav-pills mb-4 gap-2" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active shadow-sm" data-bs-toggle="pill" data-bs-target="#pills-grid" type="button" style="border-radius: 10px;">
+                <i class="fas fa-th-large me-2"></i>Visual Grid
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link shadow-sm" data-bs-toggle="pill" data-bs-target="#pills-table" type="button" style="border-radius: 10px;">
+                <i class="fas fa-list me-2"></i>Daftar Tabel
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-grid" role="tabpanel">
+            <div class="kamar-grid">
+                @foreach (var item in Model)
+                {
+                    // Logika warna dinamis langsung di sini
+                    string bgColor = (item.Status == "Terisi") 
+                        ? "linear-gradient(160deg, #ff8a80, #d32f2f)" 
+                        : "linear-gradient(160deg, #81c784, #2e7d32)";
+                    
+                    <div class="card card-kamar" style="background: @bgColor !important;">
+                        <i class="fas fa-bed mb-2" style="font-size: 1.5rem; color: white;"></i>
+                        <h4 class="mb-0 fw-bold" style="color: white;">@item.NomorKamar</h4>
+                        <small class="opacity-75" style="color: white;">Lantai @item.Lantai</small>
+                        
+                        <div class="mt-2">
+                            <span class="badge badge-status">@item.Status</span>
+                        </div>
+
+                        <div class="mt-3 d-flex justify-content-center gap-2">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-action-kamar">
+                                <i class="fas fa-pen fa-xs"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-action-kamar" onclick="return confirm('Hapus kamar ini?')">
+                                <i class="fas fa-trash fa-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="pills-table" role="tabpanel">
+            <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="px-4">No Kamar</th>
+                                <th>Lantai</th>
+                                <th>Harga</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="px-4 fw-bold">@item.NomorKamar</td>
+                                    <td>@item.Lantai</td>
+                                    <td>@item.Harga.ToString("C0", new System.Globalization.CultureInfo("id-ID"))</td>
+                                    <td>
+                                        <span class="badge @(item.Status == "Terisi" ? "bg-danger" : "bg-success") rounded-pill">
+                                            @item.Status
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning text-white px-3" style="border-radius: 8px;">Edit</a>
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger px-3" style="border-radius: 8px;" onclick="return confirm('Yakin?')">Hapus</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+@model SIMKOST.Models.Pembayaran
+
+@{
+    ViewData["Title"] = "Edit Pembayaran";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-edit me-2"></i> Edit Data Pembayaran</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nama Penghuni</label>
+                            <select asp-for="SewaId" asp-items="ViewBag.SewaId" class="form-select">
+                                <option value="">-- Pilih Penghuni --</option>
+                            </select>
+                            <span asp-validation-for="SewaId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tanggal Bayar</label>
+                            <input asp-for="TanggalBayar" type="date" class="form-control" />
+                            <small class="text-muted">Tanggal jatuh tempo akan disesuaikan otomatis.</small>
+                            <span asp-validation-for="TanggalBayar" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Jumlah Bayar</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input asp-for="JumlahBayar" type="number" class="form-control" />
+                            </div>
+                            <span asp-validation-for="JumlahBayar" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Status Pembayaran</label>
+                            <select asp-for="Status" class="form-select">
+                                <option value="Lunas">Lunas</option>
+                                <option value="Belum Lunas">Belum Lunas</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save me-1"></i> Simpan Perubahan
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Kembali
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

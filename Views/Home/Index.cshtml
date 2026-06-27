@@ -1,0 +1,158 @@
+﻿@model SIMKOST.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    
+    // Menghitung persentase hunian kamar untuk progress bar
+    double persentaseHunian = 0;
+    if (Model.TotalKamar > 0)
+    {
+        persentaseHunian = Math.Round(((double)Model.KamarTerisi / Model.TotalKamar) * 100);
+    }
+}
+
+<h2 class="mb-4 fw-bold text-dark">
+    🏠 Dashboard KOSAN PELANGI
+</h2>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card h-100 border-0 card-kamar">
+            <div class="card-body d-flex align-items-center justify-content-between p-4">
+                <div>
+                    <p class="text-muted mb-1 text-uppercase font-monospace tracking-wider">Total Kamar</p>
+                    <h2 class="mb-0 fw-bold">@Model.TotalKamar</h2>
+                </div>
+                <div class="bg-light rounded-3 p-3">
+                    <i class="fas fa-door-open fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card h-100 border-0 card-penghuni">
+            <div class="card-body d-flex align-items-center justify-content-between p-4">
+                <div>
+                    <p class="text-muted mb-1 text-uppercase font-monospace tracking-wider">Total Penghuni</p>
+                    <h2 class="mb-0 fw-bold">@Model.TotalPenghuni</h2>
+                </div>
+                <div class="bg-light rounded-3 p-3">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card h-100 border-0 card-sewa">
+            <div class="card-body d-flex align-items-center justify-content-between p-4">
+                <div>
+                    <p class="text-muted mb-1 text-uppercase font-monospace tracking-wider">Total Sewa</p>
+                    <h2 class="mb-0 fw-bold">@Model.TotalSewa</h2>
+                </div>
+                <div class="bg-light rounded-3 p-3">
+                    <i class="fas fa-file-contract fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card h-100 border-0 card-pendapatan">
+            <div class="card-body d-flex align-items-center justify-content-between p-4">
+                <div>
+                    <p class="text-muted mb-1 text-uppercase font-monospace tracking-wider">Total Pendapatan</p>
+                    <h4 class="mb-0 fw-bold">Rp @Model.TotalPendapatan.ToString("N0")</h4>
+                </div>
+                <div class="bg-light rounded-3 p-3">
+                    <i class="fas fa-wallet fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark">🔔 Ikhtisar Data Aktif</h5>
+                <a asp-controller="Pembayaran" asp-action="Index" class="btn btn-sm btn-light text-primary fw-semibold rounded-2">Lihat Semua</a>
+            </div>
+            <div class="card-body px-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr class="text-muted small text-uppercase">
+                                <th>Kamar Kosong</th>
+                                <th>Kamar Terisi</th>
+                                <th>Sudah Bayar</th>
+                                <th>Status Sistem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge bg-secondary px-2 py-1">@Model.KamarKosong Kamar</span></td>
+                                <td><span class="badge bg-dark px-2 py-1">@Model.KamarTerisi Kamar</span></td>
+                                <td><span class="badge bg-success px-2 py-1">@Model.TotalPembayaran Transaksi</span></td>
+                                <td><span class="badge bg-soft-primary text-primary px-2 py-1">Normal / Aktif</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h5 class="mb-0 fw-bold text-dark">📈 Efisiensi Hunian</h5>
+            </div>
+            <div class="card-body px-4">
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1 small">
+                        <span class="text-muted">Rasio Kamar Terisi</span>
+                        <span class="fw-bold text-dark">@persentaseHunian%</span>
+                    </div>
+                    <div class="progress rounded-pill" style="height: 10px;">
+                        <div class="progress-bar bg-primary rounded-pill" role="progressbar" style="width: @persentaseHunian%"></div>
+                    </div>
+                </div>
+                
+                <div class="p-3 bg-light rounded-3 mb-2 d-flex align-items-center">
+                    <i class="fas fa-bed text-primary fa-lg me-3"></i>
+                    <div>
+                        <small class="text-muted d-block">Ketersediaan</small>
+                        <span class="fw-bold text-dark">@Model.KamarKosong Kamar Siap Huni</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <h5 class="fw-bold text-dark mb-3">⚡ Akses Cepat Navigasi</h5>
+        <div class="d-flex flex-wrap gap-2">
+            <a asp-controller="Kamar" asp-action="Index" class="btn btn-primary px-4 py-2 rounded-3">
+                <i class="fas fa-bed me-2"></i> Kamar
+            </a>
+            <a asp-controller="Penghuni" asp-action="Index" class="btn btn-success px-4 py-2 rounded-3">
+                <i class="fas fa-users me-2"></i> Penghuni
+            </a>
+            <a asp-controller="Sewa" asp-action="Index" class="btn btn-warning px-4 py-2 rounded-3 text-white">
+                <i class="fas fa-file-contract me-2"></i> Sewa
+            </a>
+            <a asp-controller="Pembayaran" asp-action="Index" class="btn btn-info px-4 py-2 rounded-3 text-white">
+                <i class="fas fa-money-bill-wave me-2"></i> Pembayaran
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @* Script grafik telah dihapus *@
+}

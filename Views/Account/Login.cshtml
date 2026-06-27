@@ -1,0 +1,99 @@
+@{
+    Layout = null; // Kita buat halaman ini bersih tanpa sidebar
+}
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - SIMKOST</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Gradasi Modern */
+            background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%);
+            background-attachment: fixed;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.1); /* Efek Transparan */
+            backdrop-filter: blur(15px); /* Efek Kaca Blur */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .login-card h3 { font-weight: 700; margin-bottom: 25px; }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 12px;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: #3b82f6;
+            box-shadow: none;
+        }
+
+        .btn-login {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-login:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        ::placeholder { color: rgba(255, 255, 255, 0.5); }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="text-center mb-4">
+            <i class="fas fa-home fa-3x mb-3" style="color: #60a5fa;"></i>
+            <h3>Login SIMKOST</h3>
+            <p style="opacity: 0.7;">Masukkan kredensial untuk akses dashboard</p>
+        </div>
+
+        <form asp-action="Login" method="post">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="admin" required />
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required />
+            </div>
+            <button type="submit" class="btn btn-login">Login Sekarang</button>
+        </form>
+    </div>
+
+</body>
+</html>
