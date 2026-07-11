@@ -4,22 +4,22 @@ namespace SIMKOST.Models
 {
     public class Kamar
     {
+        [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Nomor kamar wajib diisi")]
-        [StringLength(10)]
+        [Required]
         public string NomorKamar { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Lantai wajib diisi")]
-        public int Lantai { get; set; }
+        // Diubah menjadi int agar sesuai dengan int(11) di MySQL
+        [Required]
+        public int Lantai { get; set; } 
 
-        [Required(ErrorMessage = "Harga wajib diisi")]
+        [Required]
         public decimal Harga { get; set; }
 
         [Required]
-        public string Status { get; set; } = "Kosong";
+        public string Status { get; set; } = string.Empty;
 
-        // Relasi ke tabel Sewa
         public ICollection<Sewa>? Sewa { get; set; }
     }
 }
