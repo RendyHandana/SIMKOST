@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SIMKOST.Data;
+using SIMKOST.Services; // <-- 1. Menambahkan namespace folder Services Anda
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         ServerVersion.AutoDetect(
             builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
+
+// --- REGISTRASI CUSTOM SERVICES ANDA ---
+// 2. Mendaftarkan Service Kamar agar bisa di-inject ke Controller
+builder.Services.AddScoped<IKamarService, KamarService>();
 
 // SESSION
 builder.Services.AddDistributedMemoryCache();
