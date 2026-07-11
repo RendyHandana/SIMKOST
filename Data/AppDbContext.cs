@@ -29,10 +29,13 @@ namespace SIMKOST.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Presisi Harga Kamar
-            modelBuilder.Entity<Kamar>()
-                .Property(k => k.Harga)
-                .HasPrecision(18, 0);
+            // Konfigurasi Tabel Kamar
+            modelBuilder.Entity<Kamar>(entity =>
+            {
+                // Presisi Harga Kamar
+                entity.Property(k => k.Harga)
+                      .HasPrecision(18, 0);
+            });
 
             // Relasi Sewa -> Penghuni
             modelBuilder.Entity<Sewa>()
