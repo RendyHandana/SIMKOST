@@ -1,80 +1,88 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SIMKOST.Data;
-using SIMKOST.Models;
+using SIMKOST.Services;
+using SIMKOST.Resources.ViewModels; // <-- Diubah agar sesuai dengan namespace baru ViewModel Anda
 
 namespace SIMKOST.Controllers
 {
     public class KamarController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IKamarService _kamarService;
 
-        public KamarController(AppDbContext context)
+        // Inject IKamarService ke dalam Constructor
+        public KamarController(IKamarService kamarService)
         {
-            _context = context;
+            _kamarService = kamarService;
         }
 
+        // Helper untuk mengecek status login session
         private bool IsLoggedIn() => HttpContext.Session.GetString("Username") != null;
 
+        // GET: Kamar
         public async Task<IActionResult> Index()
         {
             if (!IsLoggedIn()) return RedirectToAction("Login", "Account");
-            return View(await _context.Kamar.ToListAsync());
+            
+            // Mengambil data melalui Service
+            var daftarKamar = await _kamarService.GetDaftarKamarAsync();
+            return View(daftarKamar);
         }
 
+        // GET: Kamar/Create
         public IActionResult Create() => IsLoggedIn() ? View() : RedirectToAction("Login", "Account");
 
+        // POST: Kamar/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Kamar kamar)
+        public async Task<IActionResult> Create(KamarViewModel kamarVm)
         {
             if (!IsLoggedIn()) return RedirectToAction("Login", "Account");
+            
             if (ModelState.IsValid)
             {
-                _context.Add(kamar);
-                await _context.SaveChangesAsync();
+                // Proses simpan diserahkan ke Service
+                await _kamarService.AddKamarAsync(kamarVm);
                 return RedirectToAction(nameof(Index));
             }
-            return View(kamar);
+            return View(kamarVm);
         }
 
+        // GET: Kamar/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (!IsLoggedIn()) return RedirectToAction("Login", "Account");
             if (id == null) return NotFound();
 
-            var kamar = await _context.Kamar.FindAsync(id);
-            if (kamar == null) return NotFound();
-            return View(kamar);
+            // Mengambil data spesifik berdasarkan ID melalui Service
+            var kamarVm = await _kamarService.GetKamarByIdAsync(id.Value);
+            if (kamarVm == null) return NotFound();
+            
+            return View(kamarVm);
         }
 
+        // POST: Kamar/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Kamar kamar)
+        public async Task<IActionResult> Edit(int id, KamarViewModel kamarVm)
         {
             if (!IsLoggedIn()) return RedirectToAction("Login", "Account");
-            if (id != kamar.Id) return NotFound();
+            if (id != kamarVm.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
-                _context.Update(kamar);
-                await _context.SaveChangesAsync();
+                // Proses update diserahkan ke Service
+                await _kamarService.UpdateKamarAsync(kamarVm);
                 return RedirectToAction(nameof(Index));
             }
-            return View(kamar);
+            return View(kamarVm);
         }
 
-        // Action ini dipanggil langsung oleh tombol Hapus di Index.cshtml
+        // GET/POST: Kamar/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             if (!IsLoggedIn()) return RedirectToAction("Login", "Account");
 
-            var kamar = await _context.Kamar.FindAsync(id);
-            if (kamar != null)
-            {
-                _context.Kamar.Remove(kamar);
-                await _context.SaveChangesAsync();
-            }
+            // Proses penghapusan diserahkan ke Service
+            await _kamarService.DeleteKamarAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }
